@@ -29,7 +29,7 @@ class UnitSprite(pygame.sprite.Sprite):
         #self.rect= self.Unit.position
         self.rect=  (self.Unit.position[0] - Global.map_h.GetRectOffset()[0] -self.image.get_rect().width//2, self.Unit.position[1]- Global.map_h.GetRectOffset()[1] -self.image.get_rect().height//2)
 
-        print('current rect =', self.rect)
+        #print('current rect =', self.rect)
 
         if(self.Unit.stateInt == Global.gCmdListInt[1]):#selected state인 경우 자기주위에 원을 그리는 코드
             pygame.draw.circle(Global.gScreen, pygame.Color(255,0,0), self.Unit.GetRpos(), 30, 5)
@@ -44,6 +44,7 @@ class UnitBase(object):
         self.name=arg_name
         self.stateInt= Global.gCmdListInt[0] #생성시 Idle state로 setting
         self.targetPos= self.position= position
+        self.isCollision=False
         return super().__init__()
 
     def draw(self):
@@ -52,6 +53,51 @@ class UnitBase(object):
     def GetRpos(self):
         return (self.position[0] - Global.map_h.GetRectOffset()[0],  self.position[1]- Global.map_h.GetRectOffset()[1])
     
+    def StatusUpdate(self):
+        #자신의 상태에 맞게 행동을 계속 해야한다.
+        
+        xMOVE_SPPED=1
+        yMOVE_SPPED=1
+
+        tempPos= self.position
+
+        if(self.stateInt == Global.gCmdListInt[2]):
+            if self.position[0] > self.targetPos[0]:
+                xMOVE_SPPED=-1           
+
+            if self.position[1] > self.targetPos[1]:
+                yMOVE_SPPED=-1
+          
+            x=self.position[0]+ self.MOVE_SPEED*xMOVE_SPPED
+            y=self.position[1]+ self.MOVE_SPEED*yMOVE_SPPED
+            
+            if xMOVE_SPPED == 1: 
+                if(x> self.targetPos[0]):
+                    x= self.targetPos[0]
+            else:
+                if x< self.targetPos[0]:
+                    x= self.targetPos[0]
+
+            if yMOVE_SPPED==1:
+                if(y> self.targetPos[1]):
+                    y= self.targetPos[1]
+            else:
+                 if(y< self.targetPos[1]):
+                    y= self.targetPos[1]
+
+            
+
+            if((x,y) == self.targetPos):#이동이 완료되면 state를 변경해줘야 한다.
+                self.stateInt= Global.gCmdListInt[0]
+
+            self.position= (x,y)
+
+            if Global.map_h.col_detector.CheckCollision(self) == True:
+                self.position= tempPos
+                self.stateInt= Global.gCmdListInt[0]
+        
+
+        #print('I am {0} class'.format(self.name))
 
 class Protoss(UnitBase):
     """Protoss class"""
@@ -80,32 +126,15 @@ class Zealot(Protoss):
         return super().__init__('zealot', position)
 
     def draw(self):
-        print('I am {0} class'.format(self.name))       
+        #print('I am {0} class'.format(self.name))       
         return self.SpriteList
 
-    def StatusUpdate(self):
-        #자신의 상태에 맞게 행동을 계속 해야한다.
-        
-        if(self.stateInt == Global.gCmdListInt[2]):
-            x=self.position[0]+ self.MOVE_SPEED
-            y=self.position[1]+ self.MOVE_SPEED
-            
-            if(x> self.targetPos[0]):
-                x= self.targetPos[0]
-            if(y> self.targetPos[1]):
-                y= self.targetPos[1]
-
-            if((x,y) == self.targetPos):#이동이 완료되면 state를 변경해줘야 한다.
-                self.stateInt= Global.gCmdListInt[0]
-
-            self.position= (x,y)
-        
-
-        print('I am {0} class'.format(self.name))
+    
 
     def Move(self, targetXY, targetOb):
         #17,34, 51, 68
         #
+        self.isCollision= False
         self.targetPos= targetXY
         self.SpriteList.spriteinfoIdx = self.MoveSpriteList
         self.SpriteList.isSelected= False

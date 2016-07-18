@@ -11,3 +11,4 @@ gCmdListDict=dict(zip(gCmdList, gCmdListInt))
 
 map_h= MapHandler.MapHandler('MAP.png')
 Map_group= pygame.sprite.Group()
+map_h.ShowBlockLine()

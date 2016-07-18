@@ -72,14 +72,14 @@ while 1:
         else:
             continue
     #?RENDERING
-    
- 
+
     Map_group.update(deltat)
     Map_group.draw(gScreen)
     Unit_group.update(deltat)
     Unit_group.draw(gScreen)
 
    
+    #map scroll구현 부분
     m_pos= pygame.mouse.get_pos()
 
     if m_pos[1] < gScreen.get_rect().top+20:

@@ -23,6 +23,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CodeTestPolymorphism.py" />
+    <Compile Include="CollisionDetector.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Global.py" />
     <Compile Include="MapHandler.py" />
     <Compile Include="PythonApplication1.py" />
