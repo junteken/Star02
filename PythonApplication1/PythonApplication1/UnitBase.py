@@ -38,6 +38,7 @@ class UnitSprite(pygame.sprite.Sprite):
 class UnitBase(object):
     """UnitBase class"""
     
+    pygame.mixer.init()
     stateObject= [IdleState(), SelectState(), MoveState(), AttackState()]
         
     def __init__(self, arg_name, position):        
@@ -119,10 +120,14 @@ class Zealot(Protoss):
     
     MOVE_SPEED=5    
     
+    
+    moveSnd= pygame.mixer.Sound('.\\sound\\protoss\\zealot\\pzewht00.wav')
+    
     #__SpriteList는 모든 객체가 공통으로 가지는 이미지 리소스이므로 class 변수(C++에서는 static에 해당)로 정의함    
     def __init__(self, position):
         self.name= 'zealot'
         self.SpriteList= UnitSprite(self,  Global.gRsrcExtractor.GetUnitPngFileName(self.name), Global.gRsrcExtractor.GetSpriteInfo(self.name), position)
+        #self.moveSnd= pygame.mixer.Sound('.\\sound\\protoss\\zealot\\pzewht00.wav')
         return super().__init__('zealot', position)
 
     def draw(self):
@@ -139,8 +144,8 @@ class Zealot(Protoss):
         self.SpriteList.spriteinfoIdx = self.MoveSpriteList
         self.SpriteList.isSelected= False
 
-        pygame.mixer.music.load('.\\sound\\protoss\\zealot\\pzewht00.wav')
-        pygame.mixer.music.play()
+        #self.moveSnd.play()
+        moveSnd.play()
         print('Move cmd received')
 
     def Attack(self,targetXY, targetOb):

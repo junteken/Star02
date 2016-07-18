@@ -2,6 +2,9 @@ import pygame,sys, Global, UnitBase, MapHandler
 from pygame.locals import *
 from Global import *
 
+pygame.mixer.init()
+pygame.mixer.music.load('.\\music\\terran1.wav')
+pygame.mixer.music.play()
 
 UnitList=[]
 # zealot= UnitBase.Zealot()
@@ -14,9 +17,7 @@ startPos= (0,0)
 endPos= (0, 0)
 selectedRect= (startPos, endPos)
 # pygame.sprite.RenderPlain(zealot.draw())
-pygame.mixer.init()
-pygame.mixer.music.load('.\\music\\terran1.wav')
-pygame.mixer.music.play()
+
 #Unit_group.add(map_h)
 
 while 1:
